@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    
+    <title>Document</title>
+
+</head>
+<body>
+    <script>
+
+        window.onload = () => {
+            document.getElementById('dni').focus()
+        }
+
+        let url = 'https://backend-idra.onrender.com/student' 
+        
+        //promesas
+
+        function deleteStudent(){
+            remove(id).then(()=> {
+                readStudents()
+            }).catch((error)=> {
+                console.log(error)
+                
+            })
+        }
+        function save(){
+
+            
+            add().then(()=> {
+                readStudents()
+            }).catch((error) => {
+                console.log(error)
+            })
+
+        }
+        function readStudents(){
+            getAll().then((response)=> {
+            var tbody = document.getElementsByTagName('tbody') [0]
+            response.forEach(e => {
+                
+                var row = tbody.insertRow()
+                var cell = row.insertCell()
+                cell.innerHTML = e.id
+                cell = row.insertCell()
+                cell.innerHTML = e.dni
+                cell = row.insertCell()
+                cell.innerHTML = e.lastName
+                cell = row.insertCell()
+                cell.innerHTML = e.firstName
+                cell = row.insertCell()
+                cell.innerHTML = e.email
+                var button = document.createElement('button')
+                button.innerHTML = 'DELETE'
+                button.addEventListener('click', ()=> {deleteStudent(e.id)})
+                cell.innerHTML = '<button>DELETE<button>'  
+
+            })
+            document.getElementById('dni').focus()
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+        }
+
+
+        function add(){
+            return new Promise (function(resolve, reject){
+                var request = new XMLHttpRequest()
+                request.open('POST', url)
+                request.setRequestHeader('Content-Type', 'application/json')
+                
+                var student = JSON.stringify({
+                        'dni': document.getElementById('dni').value,
+                        'lastName': document.getElementById('lastName').value,
+                        'firstName': document.getElementById('firstName').value,
+                        'Email': document.getElementById('Email').value,
+                        'cohort': '0',
+                        'status':'activo',
+                        'gender': 'masculino',
+                        'address': 'acb123',
+                        'phone': '000'
+
+
+                    })
+                request.onload = function(){
+                    
+                   
+                    if(request.status == 201){
+                        resolve(request.response)
+                    }else{
+                        reject(Error('Image couldt be loaded. Error' + request.statusText))
+                    }
+                }
+
+                request.onerror = function(){
+                    reject(Error ("Oops!, there was a network error"))
+                }
+
+                request.send()
+            })
+        }
+        
+        
+        function remove(id){
+            return new Promise (function(resolve, reject){
+                var request = new XMLHttpRequest()
+                request.open('GET', id + '/getAll')
+                request.responseType = 'json'
+                
+                request.onload = function(){
+                    if(request.status == 200){
+                        resolve(request.response)
+                    }else{
+                        reject(Error('Image couldt be loaded. Error' + request.statusText))
+                    }
+                }
+
+                request.onerror = function(){
+                    reject(Error ("Oops!, there was a network error"))
+                }
+
+                request.send()
+            })
+        }
+        function promise(){
+            return new Promise (function(resolve, reject){
+                var request = new XMLHttpRequest()
+                request.open('GET', url + '/getAll')
+                request.responseType = 'json'
+                
+                request.onload = function(){
+                    if(request.status == 200){
+                        resolve(request.response)
+                    }else{
+                        reject(Error('Image couldt be loaded. Error' + request.statusText))
+                    }
+                }
+
+                request.onerror = function(){
+                    reject(Error ("Oops!, there was a network error"))
+                }
+
+                request.send()
+            })
+        }
+        
+        
+        
+            
+    </script>
+    <table style="border: 1px solid">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>DNI</th>
+                <th>LastName</th>
+                <th>FirstName</th>
+                <th>Email</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <td><input type="dni"></td>
+                <td><input type="lastName"></td>
+                <td><input type="firstName"></td>
+                <td><input type="Email"></td>
+                <td></td>
+                <td><button onclick="save()">ADD</button></td>
+            </tr>
+        </tfoot>
+    </table>
+</body>
+</html>
