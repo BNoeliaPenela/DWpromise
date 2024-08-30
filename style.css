@@ -1,0 +1,25 @@
+body{
+    
+    display: flex;
+    align-content: center;
+}
+
+table{
+    margin: auto;
+    width: 100%;
+    text-align: center;
+}
+
+
+thead{
+    border-bottom: 2px solid black;
+    background-color: rgb(7, 126, 7);
+    color:rgba(194, 236, 194, 0.904);
+}
+
+th{
+    border-right: 1px solid black;
+    width: 300px;
+    
+}
+
